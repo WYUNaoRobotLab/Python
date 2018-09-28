@@ -12,21 +12,11 @@ from aip import AipImageClassify
 import requests
 from translate import Translation
 from face_detection import Face_detection
+from name2image import name_2_image
+import random
 
 ui_file = '../ui/single_chat.ui'
 (class_ui, class_basic_class) = PyQt5.uic.loadUiType(ui_file)
-
-
-def show_image(name):
-    """
-        查询关键词，返回图片
-    """
-    url = "http://image.baidu.com/search/index?tn=baiduimage&ps=1&ct=201326592&lm=-1&cl=2&nc=1&ie=utf-8&word=" + name
-    reader = requests.get(url)
-    data = re.findall("(?<=URL\":\").*?(?=\")", reader.text)
-    if data == None:
-        return "遇到了一些问题，图片没找到"
-    return data[0]
 
 
 def identify_objects(url):
@@ -76,6 +66,7 @@ class RobotChat(QWidget):
         """
         if msg == None:
             pass
+        # 人脸检测
         elif self._sensitive_value == 1:
             msg = msg.replace("file:///", "")
             msg = msg.replace("<br>", "") 
@@ -84,9 +75,9 @@ class RobotChat(QWidget):
             print("face_image:", face_image)
             self.send_image(face_image)
             self._sensitive_value = 0
-
         elif "检测" in msg:
             self._sensitive_value += 1
+        # 翻译
         elif "翻译" in msg:
             msg = re.findall("(?<=翻译).*", msg)
             if msg[0] == "":
@@ -95,18 +86,25 @@ class RobotChat(QWidget):
                 trans = Translation()
                 trans_text = trans.translate(msg[0])[0]
                 self.send_message(trans_text)
+        # 看名找图
         elif "长什么" in msg:
-            msg = re.findall(".*?(?=长什么)", msg)
-            image_url = show_image(msg[0])
-            self.send_image(image_url)
+            msg = re.findall(".*?(?=长什么)", msg)[0]
+            print(msg)
+            image = name_2_image(msg)
+            temp = random.random()
+            image += "?a="+ str(temp)
+            self.send_image(image)
+
+        # 识别物体
+        elif "file:///" in msg:
+            msg = msg.replace("file:///", "")
+            object_name = identify_objects(msg)
+            self.send_message(object_name)
         elif len(msg) >= 100:
-            # 识别物体
             object_name = identify_objects(msg)
             self.send_message(object_name)
         else:
             self.send_message(msg)
-        # 识别天气
-        pass
 
     def send_message(self, msg):
         """
@@ -158,6 +156,7 @@ class SingleChat(class_ui, class_basic_class):
         """
         text = self.text_edit.toPlainText()
         text = re.sub("[\\n | \\r]", "<br>", text)
+        print(text)
         if text == "":
             pass
         elif "http" in text:
@@ -166,10 +165,12 @@ class SingleChat(class_ui, class_basic_class):
         elif "file://" in text:
             self.web_view.page().runJavaScript('sendImg("%s")' % text)
             self.Signal_Images.emit(text)
+
         # 文本信息
         elif "file:///" not in text:
             self.web_view.page().runJavaScript('sendMessage("%s")' % text)
             self.Signal_Messages.emit(text)
+
         # 图片信息
         else:
             print(text)
