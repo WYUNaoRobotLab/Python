@@ -1,0 +1,146 @@
+body {
+    width: 100%;
+    height: 100vh;
+    background-color: white;
+	overflow-x: hidden;
+}
+
+#dialog {
+    width: 100%;
+    height: 100%;
+}
+
+.left-message-wrapper {
+    display: flex;
+    align-items: flex-start;
+    margin: 10px 0 6px 0;
+}
+
+.avatar-wrapper {
+    width: 60px;
+    height: 60px;
+    background-color: red;
+}
+
+.avatar{
+    width: 100%;
+    height: 100%;
+}
+
+.left-message-bubble {
+    display: flex;
+    justify-content: flex-start;
+    max-width: 60vw;
+    min-height: 60px;
+    background: #EDEDEE;
+    margin-left: 16px;
+    padding: 0 10px 0 0;
+    border-radius: 5px;
+}
+
+.left-message-bubble:before {
+    content: '';
+    width: 0;
+    height: 0px;
+    position: relative;
+    left: -27px;
+    top: 10px;
+    border: solid 14px;
+    border-color: transparent #EDEDEE transparent transparent;
+    font-size: 0px;
+}
+
+.left-message-container-wrapper{
+    margin-left: -10px;
+}
+
+.message-container{
+	word-break: break-word;
+}
+
+.message-container > p {
+    font-size: 18px;
+    font-family: "Arial","Microsoft YaHei","黑体","宋体",sans-serif;
+}
+
+
+.right-message-wrapper {
+    display: flex;
+    align-items: flex-start;
+    justify-content: flex-end;
+    margin: 16px 16px 0 0;
+}
+
+.right-message-bubble {
+    display: flex;
+    justify-content: flex-start;
+    max-width: 60vw;
+    min-height: 60px;
+    background: #AFE086;
+    margin-right: 16px;
+    border-radius: 5px;
+    padding-left: 16px;
+}
+
+.right-message-bubble:after {
+    content: '';
+    width: 0;
+    height: 0px;
+    position: relative;
+    right: -28px;
+    top: 10px;
+    border: solid 14px;
+    border-color: transparent transparent transparent #AFE086;
+    font-size: 0px;
+}
+
+.left-message-container-wrapper{
+    /*margin-left: 10px;*/
+}
+
+.left-img-wrapper{
+    display: flex;
+    justify-content: flex-start;
+    margin-left: 10px;
+    width: 200px;
+    height: 100px;
+}
+
+.right-message-container-wrapper{
+    /*margin-left: 10px;*/
+}
+
+.right-img-wrapper{
+    display: flex;
+    justify-content: flex-end;
+    margin-right: 10px;
+    width: 200px;
+    height: 100px;
+}
+
+.message-img {
+    width: auto;
+    height: auto;
+    max-width: 100%;
+    max-height: 100%;
+    border-radius: 5px;
+}
+
+#large-img-mask{
+    display: none;
+    justify-content: center;
+    align-items: center;
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    width: 100%;
+    background-color: rgba(1,1,1,0.5);
+}
+
+#large-img{
+    width: 80%;
+    height: auto;
+    position: relative;
+    /*top: 25vh;*/
+}
