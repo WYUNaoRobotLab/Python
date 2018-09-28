@@ -3,7 +3,8 @@ import base64
 import cv2 as cv
 import re
 import base64
-
+import os
+import sys
 class Face_detection():
     def __init__(self):
         self.APP_ID = "14295274"
@@ -34,13 +35,24 @@ class Face_detection():
                 return face_num, age,gender,left_upper,right_bottom
 
     def draw_rect(self,left_upper,right_bottom,img_file):
-        print(left_upper,right_bottom)
+        print("draw_rect is uesd")
+        #print(left_upper,right_bottom)
+        #print(img_file)
         img = cv.imread(img_file)
-        cv.rectangle(img,left_upper,right_bottom,(0,0,255))
-        img = base64.b64encode(img.tostring())
-        s =  "data:image/jpg;base64,".encode("utf8")
-        s += img
-        return s
+        cv.rectangle(img,left_upper,right_bottom,(0,0,255),5)
+        #cv.imshow("test",img)
+        # cv.waitKey(5000)
+        cv.imwrite("temp.jpg",img)
+        #with open("temp.jpg","rb") as f:
+        #    img = f.read()
+
+        #img = base64.b64encode(img)
+        #print(img)
+        #s =  "data:image/jpg;base64,".encode("utf8")
+        #s += img
+        #print(type(s), s)
+        path = (os.path.dirname(os.path.abspath(sys.argv[0])) + "\\" + "temp.jpg").replace("\\","/")
+        return path
 
 
 

@@ -61,7 +61,6 @@ class RobotChat(QWidget):
     def __init__(self):
         super(RobotChat, self).__init__()
         self._sensitive_value = 0 #敏感值
-        self.trans = Translation()
         self.face_detection = Face_detection()
 
     def get_messages(self, msg):
@@ -82,7 +81,8 @@ class RobotChat(QWidget):
             msg = msg.replace("<br>", "") 
             face_num, age, gender, left_upper, right_bottom = self.face_detection.upload(msg)
             face_image = self.face_detection.draw_rect(left_upper,right_bottom,msg)
-            self.send_byte(face_image)
+            print("face_image:", face_image)
+            self.send_image(face_image)
             self._sensitive_value = 0
 
         elif "检测" in msg:
@@ -92,7 +92,8 @@ class RobotChat(QWidget):
             if msg[0] == "":
                 self.send_message("遇到了一些BUG，需要修复")
             else:
-                trans_text = self.trans.translate(msg[0])[0]
+                trans = Translation()
+                trans_text = trans.translate(msg[0])[0]
                 self.send_message(trans_text)
         elif "长什么" in msg:
             msg = re.findall(".*?(?=长什么)", msg)
@@ -162,7 +163,7 @@ class SingleChat(class_ui, class_basic_class):
         elif "http" in text:
             self.web_view.page().runJavaScript('sendImg("%s")' % text)
             self.Signal_Images.emit(text)
-        elif "file:///" in text:
+        elif "file://" in text:
             self.web_view.page().runJavaScript('sendImg("%s")' % text)
             self.Signal_Images.emit(text)
         # 文本信息

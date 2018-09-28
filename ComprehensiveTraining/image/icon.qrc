@@ -1,17 +1,16 @@
 <RCC>
   <qresource prefix="noclick">
-    <file>创建群聊.png</file>
-    <file>抖动.png</file>
-    <file>剪切.png</file>
-    <file>设置.png</file>
-    <file>图片.png</file>
-    <file>文件夹.png</file>
-    <file>笑脸.png</file>
-    <file>音频.png</file>
-    <file>音视频交流.png</file>
-    <file>远程桌面.png</file>
-    <file>字体.png</file>
+    <file>noclick/创建群聊.png</file>
+    <file>noclick/抖动.png</file>
+    <file>noclick/剪切.png</file>
+    <file>noclick/设置.png</file>
+    <file>noclick/图片.png</file>
+    <file>noclick/文件夹.png</file>
+    <file>noclick/笑脸.png</file>
+    <file>noclick/音频.png</file>
+    <file>noclick/音视频交流.png</file>
+    <file>noclick/远程桌面.png</file>
+    <file>noclick/字体.png</file>
   </qresource>
-  <qresource prefix="click"/>
   <qresource prefix="hover"/>
 </RCC>

@@ -19,19 +19,19 @@ class Translation():
             fromLang = 'zh'
             toLang = 'en'
         salt = random.randint(32768, 65536)
-        global  str
+        
         salt = str(salt)
         sign = self.appid + query + salt+self.secretKey
 
         self.m1.update(sign.encode(encoding='utf-8'))
         sign = self.m1.hexdigest()
-        myurl = self.myurl+'?appid='+self.appid+'&q='+parse.quote(query)+'&from='+fromLang+'&to='+toLang+'&salt='+str(salt)+'&sign='+sign
+        myurl = self.myurl+'?appid='+self.appid+'&q='+parse.quote(query)+'&from='+fromLang+'&to='+toLang+'&salt='+salt+'&sign='+sign
         try:
             httpClient = http.client.HTTPConnection('api.fanyi.baidu.com')
             httpClient.request('GET', myurl)
             response = httpClient.getresponse()
-            str = response.read().decode('utf-8')
-            str = eval(str)
+            string_info = response.read().decode('utf-8')
+            string_info = eval(string_info)
 
 
         except Exception as e:
@@ -40,7 +40,8 @@ class Translation():
             if httpClient:
                 httpClient.close()
         result = []
-        for line in str['trans_result']:
+        print(string_info)
+        for line in string_info['trans_result']:
            result.append(line["dst"])
         return result
 

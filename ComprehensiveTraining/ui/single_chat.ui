@@ -85,8 +85,8 @@ QWidget{
          <property name="styleSheet">
           <string notr="true">QPushButton#remote_desktop_btn{
 	background-color:white;
-	background-image:url(:/noclick/远程桌面.png);
 	
+	background-image: url(:/noclick/noclick/远程桌面.png);
 }</string>
          </property>
          <property name="text">
@@ -110,7 +110,8 @@ QWidget{
          </property>
          <property name="styleSheet">
           <string notr="true">QPushButton#video_call_btn{
-	background-image:url(:/noclick/音视频交流.png);
+	
+	background-image: url(:/noclick/noclick/音视频交流.png);
 	
 }</string>
          </property>
@@ -141,8 +142,8 @@ QWidget{
          </property>
          <property name="styleSheet">
           <string notr="true">QPushButton#group_chat{
-	background-image:url(:/noclick/创建群聊.png);
 	
+	background-image: url(:/noclick/noclick/创建群聊.png);
 }</string>
          </property>
          <property name="text">
@@ -166,8 +167,8 @@ QWidget{
          </property>
          <property name="styleSheet">
           <string notr="true">QPushButton#setting_btn{
-	background-image:url(:/noclick/设置.png);
 	
+	background-image: url(:/noclick/noclick/设置.png);
 }</string>
          </property>
          <property name="text">
@@ -181,6 +182,12 @@ QWidget{
       <layout class="QVBoxLayout" name="verticalLayout" stretch="10,1,3">
        <item>
         <widget class="QWebEngineView" name="web_view">
+         <property name="styleSheet">
+          <string notr="true">QWebEnglineView#web_view{
+	border-bottom-color:black;
+	border-bottom-width:1px;
+}</string>
+         </property>
          <property name="url">
           <url>
            <string>about:blank</string>
@@ -206,9 +213,7 @@ QWidget{
            </property>
            <property name="styleSheet">
             <string notr="true">QPushButton#font_btn{
-	
-	background-image: url(:/noclick/字体.png);
-	
+	background-image: url(:/noclick/noclick/字体.png);
 }</string>
            </property>
            <property name="text">
@@ -226,9 +231,7 @@ QWidget{
            </property>
            <property name="styleSheet">
             <string notr="true">QPushButton#emoji_btn{
-	
-	background-image: url(:/noclick/笑脸.png);
-	
+	background-image: url(:/noclick/noclick/笑脸.png);	
 }</string>
            </property>
            <property name="text">
@@ -253,7 +256,7 @@ QWidget{
            <property name="styleSheet">
             <string notr="true">QPushButton#screenshot_btn{
 	
-	background-image: url(:/noclick/剪切.png);
+	background-image: url(:/noclick/noclick/剪切.png);
 	
 }</string>
            </property>
@@ -279,7 +282,7 @@ QWidget{
            <property name="styleSheet">
             <string notr="true">QPushButton#quake_btn{
 	
-	background-image: url(:/noclick/抖动.png);
+	background-image: url(:/noclick/noclick/抖动.png);
 	
 }</string>
            </property>
@@ -311,7 +314,7 @@ QWidget{
            <property name="styleSheet">
             <string notr="true">QPushButton#voice_message_btn{
 	
-	background-image: url(:/noclick/音频.png);
+	background-image: url(:/noclick/noclick/音频.png);
 	
 }</string>
            </property>
@@ -337,7 +340,7 @@ QWidget{
            <property name="styleSheet">
             <string notr="true">QPushButton#send_doc_btn{
 	
-	background-image: url(:/noclick/文件夹.png);
+	background-image: url(:/noclick/noclick/文件夹.png);
 	
 }</string>
            </property>
