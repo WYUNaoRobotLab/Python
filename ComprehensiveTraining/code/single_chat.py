@@ -91,8 +91,11 @@ class RobotChat(QWidget):
             msg = re.findall(".*?(?=长什么)", msg)[0]
             print(msg)
             image = name_2_image(msg)
-            temp = random.random()
-            image += "?a="+ str(temp)
+            self.send_image(image)
+        elif "找一下" in msg:
+            msg = re.findall("(?<=找一下).*", msg)[0]
+            print(msg)
+            image = name_2_image(msg)
             self.send_image(image)
 
         # 识别物体
@@ -159,11 +162,11 @@ class SingleChat(class_ui, class_basic_class):
         print(text)
         if text == "":
             pass
-        elif "http" in text:
+        elif "http" in text or "file://" in text:
+            temp = str(random.random())
+            text += "?a="+ temp
             self.web_view.page().runJavaScript('sendImg("%s")' % text)
-            self.Signal_Images.emit(text)
-        elif "file://" in text:
-            self.web_view.page().runJavaScript('sendImg("%s")' % text)
+            text = text.replace("?a=" + temp, "")
             self.Signal_Images.emit(text)
 
         # 文本信息
@@ -188,6 +191,8 @@ class SingleChat(class_ui, class_basic_class):
         """
             机器人发送图片
         """
+        temp = random.random()
+        image += "?a="+ str(temp)
         self.web_view.page().runJavaScript('getImg("%s")' % image)
 
 
