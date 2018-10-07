@@ -4,9 +4,9 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 from tensorflow.python import pywrap_tensorflow
-from tensorflow.python import debug as tfdbg
-import cv2
-from needed_function import random_mini_batches,readh5
+# from tensorflow.python import debug as tfdbg
+import cv2 
+
 
 
 class Yolo():
@@ -35,7 +35,10 @@ class Yolo():
                                       trainable=training_able)
         else:
             filter_ = tf.get_variable(name=name, dtype=tf.float32, initializer=init_filter, trainable=training_able)
+        
         conv_ = tf.nn.conv2d(input_data, filter_, strides=strides, padding=padding)
+        #self.conv_1 = conv_
+
         mean, variance =tf.nn.moments(conv_,axes=[0,1,2],shift=None,name=None,keep_dims=False)
         if init_gama is None:
             gama = tf.get_variable(name = "gama" + name.split("_")[-1],initializer=tf.ones(shape = variance.shape))
@@ -519,7 +522,7 @@ class Yolo():
         box_scores = tf.expand_dims(pred_conf, axis=1) * pred_prob          # confidence * probability_class  shape(batch*grid*grid*num_anchor_per_cell,classes)
         box_label = tf.argmax(box_scores, axis=-1)                          # shape (batch*grid*grid*num_anchor_per_cell,)
         box_scores_max = tf.reduce_max(box_scores, axis=-1)                 # shape (batch*grid*grid*num_anchor_per_cell,)
-        pred_mask = box_scores_max > score_threshold                        # shape (batch*grid*grid*num_anchor_per_cell,)
+        pred_mask = box_scores_max >\n score_threshold                        # shape (batch*grid*grid*num_anchor_per_cell,)
         boxes = tf.boolean_mask(pred_loc, pred_mask)                        # shape (unknown,4)， 因为pred_mask中mask对应的pred_loc的数据会被抛弃
         scores = tf.boolean_mask(box_scores_max, pred_mask)                 # shape  (unknown,)
         pred_classes = tf.boolean_mask(box_label, pred_mask)                # shape  (unknown,)
@@ -534,7 +537,8 @@ class Yolo():
         print("classes shape is :",classes.shape)
         with tf.Session() as sess:
             sess.run(tf.global_variables_initializer())
-            fin_boxes , fin_scores, fin_classes ,temp_value = sess.run([boxes,scores,classes,temp],feed_dict={sample_placeholder:sample/255})
+            fin_boxes , fin_scores, fin_classes ,temp_value  = sess.run([boxes,scores,classes,temp],feed_dict={sample_placeholder:sample/255})
+
         return fin_boxes, fin_scores, fin_classes ,temp_value
     def draw_rectangle(self,boxes, scores, classes,img,class_dict):
         """
@@ -560,7 +564,9 @@ class Yolo():
         conv_1 = self.my_conv(name = "filter_1",shape = [3,3,3,32],input_data = sample_placeholder, strides = [1,1,1,1], 
                               padding ="SAME",training_able=False ,init_filter = reader.get_tensor("filter_1"),
                              init_beta = reader.get_tensor("beta1"),init_gama = reader.get_tensor("gama1"))
+
         print("conv_1 shpae is :",conv_1.shape) # (None,416,416,32)
+        
         conv_2 = self.my_conv(name = "filter_2",shape = [3,3,32,64],input_data = conv_1, strides = [1,2,2,1],
                               padding ="SAME",training_able=False,init_filter = reader.get_tensor("filter_2"),
                              init_beta = reader.get_tensor("beta2"),init_gama = reader.get_tensor("gama2"))
@@ -638,39 +644,33 @@ class Yolo():
         print("conv_15 shape is:", conv_15.shape)
         return conv_15
 
-
-
-
-
-
-
-
 if __name__ =="__main__":
+    from needed_function import random_mini_batches,readh5
     reader = pywrap_tensorflow.NewCheckpointReader(r'D:\studyINF\AI\YOLOv3\test_samples_copy2\model.ckpt-80')
     dict_class = {}
     dict_class[0] = "ball"
     dict_class[1] = "chess"
     dict_class[2] = "pen"
 
-    anchor_box = np.array([[55.13103448, 29.12413793],
-                           [24.93540052, 30.69250646],
-                           [21.9784264, 20.24365482],
-                           [15.75308642, 47.22222222],
-                           [30.5497076, 52.80116959],
-                           [49.05109489, 13.37956204],
-                           [34.78171091, 23.25073746],
-                           [16.73464912, 15.02631579]], dtype=np.float32) / (
+    anchor_box = np.array([[19.07632094, 17.52739726],
+                           [45.97297297, 15.77927928],
+                           [27.28571429, 25.73086735],
+                           [16.81603774, 45.10849057],
+                           [53.87195122, 28.81097561],
+                           [50.42105263, 83.23684211],
+                           [92.86666667, 69.46666667],
+                           [31.02752294, 50.16055046]], dtype=np.float32) / (
                      np.array([416.0, 416.0], dtype=np.float32).reshape(1, 2))
 
     train_images, anchor_labels, true_box_labels, prior_boxes = readh5(r"D:\studyINF\AI\YOLOv3\train_data2.h5")
 
-    for i in range(0,20):
+    for i in range(0,1):
 
         sample = train_images[i].reshape((-1,) + train_images[0].shape)
         tf.reset_default_graph()
         one = Yolo(num_true_boxes=true_box_labels.shape[1], num_anchor_per_box=anchor_labels.shape[3],
                    img_width=train_images.shape[2], img_height=train_images.shape[1], training_able=None)
-        fin_boxes, fin_scores, fin_classes, temp_value = one.prediction(reader, sample / 255, num_classes=3,
+        fin_boxes, fin_scores, fin_classes, temp_value = one.prediction(reader, sample / 255.0, num_classes=3,
                                                                     anchor_box_tensor=anchor_box, score_threshold=0.4,
                                                                     iou_threshold=0.3)
 
@@ -678,7 +678,18 @@ if __name__ =="__main__":
         img = one.draw_rectangle(fin_boxes, fin_scores, fin_classes, np.squeeze(sample, axis=0), dict_class)
         cv2.imshow("img",cv2.cvtColor(img,cv2.COLOR_BGR2RGB))
         cv2.waitKey(0)
-
+    # sample = cv2.imread(r"C:\Users\lcq\Pictures\test.jpg")
+    # sample = cv2.cvtColor(sample,cv2.COLOR_BGR2RGB)
+    # sample = sample.reshape((1,)+sample.shape)
+    # tf.reset_default_graph()
+    # one = Yolo(num_true_boxes=true_box_labels.shape[1], num_anchor_per_box=anchor_labels.shape[3],
+                   # img_width=train_images.shape[2], img_height=train_images.shape[1], training_able=None)
+    # fin_boxes, fin_scores, fin_classes, temp_value = one.prediction(reader, sample / 255.0, num_classes=3,
+                                                                    # anchor_box_tensor=anchor_box, score_threshold=0.4,
+                                                                    # iou_threshold=0.3)
+    # img = one.draw_rectangle(fin_boxes, fin_scores, fin_classes, np.squeeze(sample, axis=0), dict_class)
+    # cv2.imshow("img",cv2.cvtColor(img,cv2.COLOR_RGB2BGR))
+    # cv2.waitKey(0)
 
 
 

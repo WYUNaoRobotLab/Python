@@ -1,0 +1,3 @@
+ball:0
+chess:1
+pen:2
